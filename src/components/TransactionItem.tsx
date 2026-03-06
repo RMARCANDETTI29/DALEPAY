@@ -23,7 +23,8 @@ export default function TransactionItem({ tx, userId }: Props) {
       ? `Enviado a ${tx.receiver_email || 'usuario'}`
       : `Recibido de ${tx.sender_email || 'usuario'}`
 
-  const amountStr = `${isSender && !isConversion ? '-' : '+'}${CURRENCY_SYMBOLS[tx.currency]} ${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+  const amount = Number(tx.amount)
+  const amountStr = `${isSender && !isConversion ? '-' : '+'}${CURRENCY_SYMBOLS[tx.currency]} ${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
   const amountColor = isSender && !isConversion ? 'text-danger' : 'text-success'
 
   const date = new Date(tx.created_at).toLocaleDateString('es-VE', {
@@ -34,8 +35,8 @@ export default function TransactionItem({ tx, userId }: Props) {
   })
 
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-surface-lighter last:border-0">
-      <div className="shrink-0">{icon}</div>
+    <div className="flex items-center gap-3 py-3 border-b border-white/5 last:border-0">
+      <div className="shrink-0 w-10 h-10 rounded-full glass flex items-center justify-center">{icon}</div>
       <div className="flex-1 min-w-0">
         <p className="text-sm text-text truncate">{label}</p>
         <p className="text-xs text-text-secondary">{date}</p>

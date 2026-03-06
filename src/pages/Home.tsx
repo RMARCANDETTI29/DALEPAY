@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useWalletStore } from '../store/walletStore'
 import WalletCard from '../components/WalletCard'
@@ -7,6 +8,7 @@ import TransactionItem from '../components/TransactionItem'
 export default function Home() {
   const { user, profile } = useAuthStore()
   const { wallets, transactions, fetchWallets, fetchTransactions } = useWalletStore()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (user) {
@@ -18,10 +20,10 @@ export default function Home() {
   const firstName = profile?.full_name?.split(' ')[0] || 'Usuario'
 
   return (
-    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full">
+    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full animate-fade-in">
       <div className="mb-6">
         <p className="text-text-secondary text-sm">Hola,</p>
-        <h1 className="text-2xl font-bold">{firstName}</h1>
+        <h1 className="text-2xl font-extrabold">{firstName}</h1>
       </div>
 
       {/* Wallets Carousel */}
@@ -39,39 +41,52 @@ export default function Home() {
       {/* Quick Actions */}
       <div className="grid grid-cols-3 gap-3 mt-6">
         {[
-          { label: 'Enviar', href: '/send', emoji: '↗' },
-          { label: 'Recibir', href: '/qr', emoji: '↙' },
-          { label: 'Convertir', href: '/convert', emoji: '⇄' },
+          { label: 'Enviar', path: '/send', icon: '↗', gradient: 'from-violet-600/20 to-purple-600/20' },
+          { label: 'Recibir', path: '/qr', icon: '↙', gradient: 'from-emerald-600/20 to-teal-600/20' },
+          { label: 'Convertir', path: '/convert', icon: '⇄', gradient: 'from-blue-600/20 to-cyan-600/20' },
         ].map((action) => (
-          <a
+          <button
             key={action.label}
-            href={action.href}
-            className="bg-surface rounded-xl p-4 text-center hover:bg-surface-light transition-colors"
+            onClick={() => navigate(action.path)}
+            className={`glass rounded-2xl p-4 text-center hover:scale-[1.02] active:scale-[0.98] transition-all duration-200`}
           >
-            <span className="text-2xl">{action.emoji}</span>
-            <p className="text-sm mt-1 text-text-secondary">{action.label}</p>
-          </a>
+            <div className={`w-10 h-10 mx-auto rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-2`}>
+              <span className="text-xl">{action.icon}</span>
+            </div>
+            <p className="text-sm font-medium text-text-secondary">{action.label}</p>
+          </button>
         ))}
       </div>
 
       {/* Extra Links */}
       <div className="grid grid-cols-2 gap-3 mt-3">
-        <a href="/merchants/register" className="bg-surface rounded-xl p-3 text-center hover:bg-surface-light transition-colors">
+        <button
+          onClick={() => navigate('/merchants/register')}
+          className="glass rounded-2xl p-3 text-center hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
           <span className="text-lg">⚡</span>
-          <p className="text-xs mt-1 text-text-secondary">Registro Comercio</p>
-        </a>
+          <p className="text-xs mt-1 text-text-secondary font-medium">Registro Comercio</p>
+        </button>
         {profile?.is_admin && (
-          <a href="/admin" className="bg-primary/20 rounded-xl p-3 text-center hover:bg-primary/30 transition-colors">
+          <button
+            onClick={() => navigate('/admin')}
+            className="glass rounded-2xl p-3 text-center border-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+          >
             <span className="text-lg">⚙</span>
-            <p className="text-xs mt-1 text-primary-light">Admin</p>
-          </a>
+            <p className="text-xs mt-1 text-primary-light font-medium">Admin</p>
+          </button>
         )}
       </div>
 
       {/* Transactions */}
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-3">Actividad reciente</h2>
-        <div className="bg-surface rounded-xl px-4">
+      <div className="mt-6 animate-slide-up">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold">Actividad reciente</h2>
+          <button onClick={() => navigate('/history')} className="text-xs text-primary-light font-medium">
+            Ver todo
+          </button>
+        </div>
+        <div className="glass rounded-2xl px-4">
           {transactions.length === 0 ? (
             <p className="text-text-secondary text-sm py-6 text-center">
               Sin transacciones aun

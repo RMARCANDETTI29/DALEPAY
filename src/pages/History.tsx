@@ -26,18 +26,18 @@ export default function History() {
   ]
 
   return (
-    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full">
-      <h1 className="text-2xl font-bold mb-4">Historial</h1>
+    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full animate-fade-in">
+      <h1 className="text-2xl font-extrabold mb-4">Historial</h1>
 
       <div className="flex gap-2 mb-4">
         {filters.map((f) => (
           <button
             key={f.value}
             onClick={() => setFilter(f.value)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
               filter === f.value
-                ? 'bg-primary text-white'
-                : 'bg-surface text-text-secondary'
+                ? 'gradient-purple text-white shadow-lg shadow-primary/20'
+                : 'glass text-text-secondary'
             }`}
           >
             {f.label}
@@ -45,9 +45,9 @@ export default function History() {
         ))}
       </div>
 
-      <div className="bg-surface rounded-xl px-4">
+      <div className="glass rounded-2xl px-4">
         {filtered.length === 0 ? (
-          <p className="text-text-secondary text-sm py-6 text-center">
+          <p className="text-text-secondary text-sm py-8 text-center">
             No hay transacciones
           </p>
         ) : (

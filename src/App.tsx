@@ -22,9 +22,14 @@ function AppContent() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-primary-light mb-2">DalePay</h1>
-          <p className="text-text-secondary">Cargando...</p>
+        <div className="text-center animate-fade-in">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-purple flex items-center justify-center">
+            <span className="text-2xl font-extrabold text-white">D</span>
+          </div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent">
+            DalePay
+          </h1>
+          <p className="text-text-secondary text-sm mt-2">Cargando...</p>
         </div>
       </div>
     )

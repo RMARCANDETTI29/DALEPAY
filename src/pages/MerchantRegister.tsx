@@ -70,10 +70,10 @@ export default function MerchantRegister() {
   }
 
   return (
-    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full">
+    <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Registro de Comercio</h1>
-        <button onClick={() => navigate('/')} className="text-sm text-primary-light">Volver</button>
+        <h1 className="text-2xl font-extrabold">Registro de Comercio</h1>
+        <button onClick={() => navigate('/')} className="text-sm text-primary-light font-medium">Volver</button>
       </div>
 
       {/* Plan Selection */}
@@ -82,17 +82,21 @@ export default function MerchantRegister() {
           <button
             key={p.id}
             onClick={() => setPlan(p.id)}
-            className={`rounded-xl p-4 text-left border-2 transition-colors ${
+            className={`rounded-2xl p-4 text-left transition-all ${
               plan === p.id
-                ? 'border-primary bg-primary/10'
-                : 'border-surface-lighter bg-surface'
+                ? 'glass border-primary/40 shadow-lg shadow-primary/10'
+                : 'glass'
             }`}
           >
-            <p className="font-semibold text-lg">{p.name}</p>
-            <p className="text-2xl font-bold text-primary-light">${p.price}<span className="text-sm text-text-secondary font-normal">/mes</span></p>
+            <p className="font-bold text-lg">{p.name}</p>
+            <p className="text-2xl font-extrabold bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent">
+              ${p.price}<span className="text-sm text-text-secondary font-normal">/mes</span>
+            </p>
             <ul className="mt-3 space-y-1">
               {p.features.map((f) => (
-                <li key={f} className="text-xs text-text-secondary">- {f}</li>
+                <li key={f} className="text-xs text-text-secondary flex items-start gap-1">
+                  <span className="text-success">✓</span> {f}
+                </li>
               ))}
             </ul>
           </button>
@@ -101,47 +105,47 @@ export default function MerchantRegister() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="text-sm text-text-secondary mb-1 block">Nombre del comercio</label>
+          <label className="text-sm text-text-secondary mb-1 block font-medium">Nombre del comercio</label>
           <input
             type="text"
             placeholder="Mi Tienda C.A."
             value={businessName}
             onChange={(e) => setBusinessName(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text placeholder:text-text-secondary focus:outline-none focus:border-primary"
+            className="w-full px-4 py-3.5 rounded-xl glass text-text placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
         </div>
 
         <div>
-          <label className="text-sm text-text-secondary mb-1 block">RIF</label>
+          <label className="text-sm text-text-secondary mb-1 block font-medium">RIF</label>
           <input
             type="text"
             placeholder="J-12345678-9"
             value={rif}
             onChange={(e) => setRif(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text placeholder:text-text-secondary focus:outline-none focus:border-primary"
+            className="w-full px-4 py-3.5 rounded-xl glass text-text placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
         </div>
 
-        <div className="bg-surface rounded-xl p-4">
+        <div className="glass rounded-2xl p-4">
           <div className="flex justify-between text-sm">
             <span className="text-text-secondary">Plan seleccionado</span>
-            <span className="font-medium">{selectedPlan.name}</span>
+            <span className="font-semibold">{selectedPlan.name}</span>
           </div>
           <div className="flex justify-between text-sm mt-1">
             <span className="text-text-secondary">Costo mensual</span>
-            <span className="font-bold text-primary-light">${selectedPlan.price}/mes</span>
+            <span className="font-extrabold text-primary-light">${selectedPlan.price}/mes</span>
           </div>
         </div>
 
-        {error && <p className="text-danger text-sm text-center">{error}</p>}
-        {success && <p className="text-success text-sm text-center">{success}</p>}
+        {error && <p className="text-danger text-sm text-center animate-fade-in">{error}</p>}
+        {success && <p className="text-success text-sm text-center animate-fade-in">{success}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary-dark transition-colors disabled:opacity-50"
+          className="w-full py-3.5 rounded-xl gradient-purple text-white font-semibold transition-all disabled:opacity-50 hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98]"
         >
           {loading ? 'Registrando...' : 'Registrar Comercio'}
         </button>

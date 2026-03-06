@@ -28,11 +28,20 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-bg">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary-light tracking-tight">DalePay</h1>
-          <p className="text-text-secondary mt-2">Tu wallet digital</p>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-bg relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl translate-y-1/2" />
+
+      <div className="w-full max-w-sm relative z-10 animate-slide-up">
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl gradient-purple flex items-center justify-center shadow-lg shadow-primary/20">
+            <span className="text-3xl font-extrabold text-white">D</span>
+          </div>
+          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-primary-light to-accent bg-clip-text text-transparent tracking-tight">
+            DalePay
+          </h1>
+          <p className="text-text-secondary mt-2">Tu wallet digital multidivisa</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -43,7 +52,7 @@ export default function Login() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text placeholder:text-text-secondary focus:outline-none focus:border-primary"
+              className="w-full px-4 py-3.5 rounded-xl glass text-text placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
           )}
           <input
@@ -52,7 +61,7 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text placeholder:text-text-secondary focus:outline-none focus:border-primary"
+            className="w-full px-4 py-3.5 rounded-xl glass text-text placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
           <input
             type="password"
@@ -61,15 +70,15 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text placeholder:text-text-secondary focus:outline-none focus:border-primary"
+            className="w-full px-4 py-3.5 rounded-xl glass text-text placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
           />
 
-          {error && <p className="text-danger text-sm text-center">{error}</p>}
+          {error && <p className="text-danger text-sm text-center animate-fade-in">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary-dark transition-colors disabled:opacity-50"
+            className="w-full py-3.5 rounded-xl gradient-purple text-white font-semibold transition-all disabled:opacity-50 hover:shadow-lg hover:shadow-primary/25 active:scale-[0.98]"
           >
             {loading ? 'Cargando...' : isRegister ? 'Registrarse' : 'Iniciar Sesion'}
           </button>
@@ -79,7 +88,7 @@ export default function Login() {
           {isRegister ? 'Ya tienes cuenta?' : 'No tienes cuenta?'}{' '}
           <button
             onClick={() => { setIsRegister(!isRegister); setError('') }}
-            className="text-primary-light font-medium"
+            className="text-primary-light font-semibold"
           >
             {isRegister ? 'Iniciar sesion' : 'Registrate'}
           </button>

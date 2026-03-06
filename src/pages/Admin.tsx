@@ -8,6 +8,7 @@ interface FeeSummary {
   today: number
   week: number
   month: number
+  total: number
   byConversion: number
   byTransfer: number
 }
@@ -15,22 +16,27 @@ interface FeeSummary {
 export default function Admin() {
   const { profile } = useAuthStore()
   const navigate = useNavigate()
+  const [summary, setSummary] = useState<FeeSummary>({ today: 0, week: 0, month: 0, total: 0, byConversion: 0, byTransfer: 0 })
   const [fees, setFees] = useState<FeeCollected[]>([])
-  const [summary, setSummary] = useState<FeeSummary>({ today: 0, week: 0, month: 0, byConversion: 0, byTransfer: 0 })
   const [rates, setRates] = useState<ExchangeRate[]>([])
   const [editingRate, setEditingRate] = useState<string | null>(null)
   const [newRate, setNewRate] = useState('')
   const [loading, setLoading] = useState(true)
+  const [userCount, setUserCount] = useState(0)
+  const [txCount, setTxCount] = useState(0)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
-    const { data: feesData } = await supabase
-      .from('fees_collected')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(200)
 
-    if (feesData) {
+    const [feesRes, ratesRes, profilesRes, txRes] = await Promise.all([
+      supabase.from('fees_collected').select('*').order('created_at', { ascending: false }).limit(200),
+      supabase.from('exchange_rates').select('*').order('from_currency'),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('transactions').select('id', { count: 'exact', head: true }),
+    ])
+
+    if (feesRes.data) {
+      const feesData = feesRes.data
       setFees(feesData)
       const now = new Date()
       const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -38,26 +44,27 @@ export default function Admin() {
       startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
+      const byConversion = feesData.filter(f => f.fee_type === 'conversion').reduce((s, f) => s + Number(f.amount), 0)
+      const byTransfer = feesData.filter(f => f.fee_type === 'transfer').reduce((s, f) => s + Number(f.amount), 0)
+
       setSummary({
         today: feesData.filter(f => new Date(f.created_at) >= startOfDay).reduce((s, f) => s + Number(f.amount), 0),
         week: feesData.filter(f => new Date(f.created_at) >= startOfWeek).reduce((s, f) => s + Number(f.amount), 0),
         month: feesData.filter(f => new Date(f.created_at) >= startOfMonth).reduce((s, f) => s + Number(f.amount), 0),
-        byConversion: feesData.filter(f => f.fee_type === 'conversion').reduce((s, f) => s + Number(f.amount), 0),
-        byTransfer: feesData.filter(f => f.fee_type === 'transfer').reduce((s, f) => s + Number(f.amount), 0),
+        total: byConversion + byTransfer,
+        byConversion,
+        byTransfer,
       })
     }
 
-    const { data: ratesData } = await supabase.from('exchange_rates').select('*').order('from_currency')
-    if (ratesData) setRates(ratesData)
-
+    if (ratesRes.data) setRates(ratesRes.data)
+    setUserCount(profilesRes.count ?? 0)
+    setTxCount(txRes.count ?? 0)
     setLoading(false)
   }, [])
 
   useEffect(() => {
-    if (!profile?.is_admin) {
-      navigate('/')
-      return
-    }
+    if (!profile?.is_admin) { navigate('/'); return }
     fetchData()
   }, [profile, navigate, fetchData])
 
@@ -80,47 +87,51 @@ export default function Admin() {
     )
   }
 
+  const cards = [
+    { label: 'Hoy', value: summary.today, color: 'text-success' },
+    { label: 'Esta semana', value: summary.week, color: 'text-success' },
+    { label: 'Este mes', value: summary.month, color: 'text-success' },
+    { label: 'Por conversiones', value: summary.byConversion, color: 'text-warning' },
+    { label: 'Por envios P2P', value: summary.byTransfer, color: 'text-accent' },
+    { label: 'Total historico', value: summary.total, color: 'text-primary-light' },
+  ]
+
   return (
-    <div className="pb-20 px-4 pt-6 max-w-4xl mx-auto w-full">
+    <div className="pb-20 px-4 pt-6 max-w-4xl mx-auto w-full animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Panel de Admin</h1>
-        <button onClick={() => navigate('/')} className="text-sm text-primary-light">Volver</button>
+        <h1 className="text-2xl font-extrabold">Panel Admin</h1>
+        <button onClick={() => navigate('/')} className="text-sm text-primary-light font-medium">Volver</button>
+      </div>
+
+      {/* Stats */}
+      <div className="flex gap-3 mb-6">
+        <div className="glass rounded-2xl p-4 flex-1 text-center">
+          <p className="text-2xl font-extrabold text-primary-light">{userCount}</p>
+          <p className="text-xs text-text-secondary mt-1">Usuarios</p>
+        </div>
+        <div className="glass rounded-2xl p-4 flex-1 text-center">
+          <p className="text-2xl font-extrabold text-accent">{txCount}</p>
+          <p className="text-xs text-text-secondary mt-1">Transacciones</p>
+        </div>
       </div>
 
       {/* Fee Summary Cards */}
+      <h2 className="text-lg font-semibold mb-3">Comisiones Cobradas</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Hoy</p>
-          <p className="text-xl font-bold text-success">${summary.today.toFixed(2)}</p>
-        </div>
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Esta semana</p>
-          <p className="text-xl font-bold text-success">${summary.week.toFixed(2)}</p>
-        </div>
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Este mes</p>
-          <p className="text-xl font-bold text-success">${summary.month.toFixed(2)}</p>
-        </div>
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Por conversiones</p>
-          <p className="text-xl font-bold text-warning">${summary.byConversion.toFixed(2)}</p>
-        </div>
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Por envios P2P</p>
-          <p className="text-xl font-bold text-accent">${summary.byTransfer.toFixed(2)}</p>
-        </div>
-        <div className="bg-surface rounded-xl p-4">
-          <p className="text-xs text-text-secondary">Total historico</p>
-          <p className="text-xl font-bold text-primary-light">${(summary.byConversion + summary.byTransfer).toFixed(2)}</p>
-        </div>
+        {cards.map((card) => (
+          <div key={card.label} className="glass rounded-2xl p-4">
+            <p className="text-xs text-text-secondary">{card.label}</p>
+            <p className={`text-xl font-extrabold ${card.color}`}>${card.value.toFixed(2)}</p>
+          </div>
+        ))}
       </div>
 
       {/* Exchange Rates */}
       <h2 className="text-lg font-semibold mb-3">Tasas de Cambio</h2>
-      <div className="bg-surface rounded-xl p-4 mb-6">
+      <div className="glass rounded-2xl p-4 mb-6">
         {rates.map((r) => (
-          <div key={r.id} className="flex items-center justify-between py-2 border-b border-surface-lighter last:border-0">
-            <span className="text-sm font-medium">{r.from_currency} → {r.to_currency}</span>
+          <div key={r.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
+            <span className="text-sm font-semibold">{r.from_currency} → {r.to_currency}</span>
             {editingRate === r.id ? (
               <div className="flex items-center gap-2">
                 <input
@@ -128,18 +139,18 @@ export default function Admin() {
                   step="0.000001"
                   value={newRate}
                   onChange={(e) => setNewRate(e.target.value)}
-                  className="w-28 px-2 py-1 rounded bg-surface-light border border-surface-lighter text-text text-sm focus:outline-none focus:border-primary"
+                  className="w-28 px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-text text-sm focus:outline-none focus:ring-1 focus:ring-primary/50"
                   autoFocus
                 />
-                <button onClick={() => handleUpdateRate(r.id)} className="text-xs text-success font-medium">OK</button>
-                <button onClick={() => setEditingRate(null)} className="text-xs text-danger font-medium">X</button>
+                <button onClick={() => handleUpdateRate(r.id)} className="text-xs text-success font-semibold">OK</button>
+                <button onClick={() => setEditingRate(null)} className="text-xs text-danger font-semibold">X</button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-sm">{Number(r.rate).toLocaleString('en-US', { maximumFractionDigits: 6 })}</span>
+                <span className="text-sm font-medium">{Number(r.rate).toLocaleString('en-US', { maximumFractionDigits: 6 })}</span>
                 <button
                   onClick={() => { setEditingRate(r.id); setNewRate(String(r.rate)) }}
-                  className="text-xs text-primary-light"
+                  className="text-xs text-primary-light font-medium glass px-2 py-1 rounded-lg"
                 >
                   Editar
                 </button>
@@ -152,22 +163,24 @@ export default function Admin() {
 
       {/* Recent Fees */}
       <h2 className="text-lg font-semibold mb-3">Comisiones Recientes</h2>
-      <div className="bg-surface rounded-xl px-4">
+      <div className="glass rounded-2xl px-4">
         {fees.length === 0 ? (
           <p className="text-text-secondary text-sm py-6 text-center">Sin comisiones registradas</p>
         ) : (
           fees.slice(0, 20).map((f) => (
-            <div key={f.id} className="flex items-center justify-between py-3 border-b border-surface-lighter last:border-0">
+            <div key={f.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
               <div>
                 <p className="text-sm">
-                  <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mr-2 ${f.fee_type === 'conversion' ? 'bg-warning/20 text-warning' : 'bg-accent/20 text-accent'}`}>
+                  <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-semibold mr-2 ${
+                    f.fee_type === 'conversion' ? 'bg-warning/15 text-warning' : 'bg-accent/15 text-accent'
+                  }`}>
                     {f.fee_type === 'conversion' ? 'Conversion' : 'Envio'}
                   </span>
                   {f.currency}
                 </p>
                 <p className="text-xs text-text-secondary">{new Date(f.created_at).toLocaleString('es-VE')}</p>
               </div>
-              <p className="text-sm font-semibold text-success">${Number(f.amount).toFixed(2)}</p>
+              <p className="text-sm font-bold text-success">${Number(f.amount).toFixed(2)}</p>
             </div>
           ))
         )}
