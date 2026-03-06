@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6C5CE7;
+  --color-primary-light: #A29BFE;
+  --color-primary-dark: #4A3CB5;
+  --color-accent: #00D2D3;
+  --color-accent-dark: #00A3A4;
+  --color-surface: #1E1E2E;
+  --color-surface-light: #2A2A3E;
+  --color-surface-lighter: #353550;
+  --color-bg: #12121C;
+  --color-success: #00B894;
+  --color-danger: #FF6B6B;
+  --color-warning: #FDCB6E;
+  --color-text: #F5F5F5;
+  --color-text-secondary: #A0A0B8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-lighter);
+  border-radius: 3px;
+}
