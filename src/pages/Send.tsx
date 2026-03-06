@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useWalletStore } from '../store/walletStore'
 import type { Currency } from '../types'
-import { CURRENCY_SYMBOLS } from '../types'
+import { CURRENCY_SYMBOLS, TRANSFER_FEE_RATE } from '../types'
 
 export default function Send() {
   const { user } = useAuthStore()
@@ -15,20 +15,22 @@ export default function Send() {
   const [success, setSuccess] = useState('')
 
   const selectedWallet = wallets.find((w) => w.currency === currency)
+  const numAmount = parseFloat(amount) || 0
+  const fee = Math.round(numAmount * TRANSFER_FEE_RATE * 100) / 100
+  const netAmount = numAmount - fee
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     setError('')
     setSuccess('')
-    const numAmount = parseFloat(amount)
     if (isNaN(numAmount) || numAmount <= 0) {
       setError('Monto invalido')
       return
     }
     try {
-      await sendMoney(user.id, email, numAmount, currency, description)
-      setSuccess(`Enviado ${CURRENCY_SYMBOLS[currency]} ${numAmount.toFixed(2)} exitosamente`)
+      await sendMoney(user.id, user.email!, email, numAmount, currency, description)
+      setSuccess(`Enviado ${CURRENCY_SYMBOLS[currency]} ${netAmount.toFixed(2)} exitosamente (comision: ${CURRENCY_SYMBOLS[currency]} ${fee.toFixed(2)})`)
       setEmail('')
       setAmount('')
       setDescription('')
@@ -84,6 +86,19 @@ export default function Send() {
             className="w-full px-4 py-3 rounded-xl bg-surface border border-surface-lighter text-text text-xl font-semibold placeholder:text-text-secondary focus:outline-none focus:border-primary"
           />
         </div>
+
+        {numAmount > 0 && (
+          <div className="bg-surface rounded-xl p-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-text-secondary">Comision (0.3%)</span>
+              <span>{CURRENCY_SYMBOLS[currency]} {fee.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-sm font-semibold border-t border-surface-lighter pt-2">
+              <span>El destinatario recibe</span>
+              <span className="text-success">{CURRENCY_SYMBOLS[currency]} {netAmount.toFixed(2)}</span>
+            </div>
+          </div>
+        )}
 
         <div>
           <label className="text-sm text-text-secondary mb-1 block">Descripcion (opcional)</label>

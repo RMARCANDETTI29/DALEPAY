@@ -32,6 +32,37 @@ export interface Profile {
   full_name: string
   phone: string | null
   avatar_url: string | null
+  is_admin?: boolean
+  created_at: string
+}
+
+export interface FeeCollected {
+  id: string
+  transaction_id: string | null
+  user_id: string | null
+  amount: number
+  currency: string
+  fee_type: 'conversion' | 'transfer'
+  created_at: string
+}
+
+export interface ExchangeRate {
+  id: string
+  from_currency: string
+  to_currency: string
+  rate: number
+  updated_at: string
+}
+
+export interface Merchant {
+  id: string
+  user_id: string | null
+  business_name: string
+  rif: string
+  plan: 'basico' | 'pro'
+  plan_price: number
+  expires_at: string | null
+  active: boolean
   created_at: string
 }
 
@@ -57,3 +88,4 @@ export const EXCHANGE_RATES: Record<string, number> = {
 }
 
 export const COMMISSION_RATE = 0.005
+export const TRANSFER_FEE_RATE = 0.003

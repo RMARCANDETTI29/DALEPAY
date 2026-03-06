@@ -9,6 +9,8 @@ import QR from './pages/QR'
 import Convert from './pages/Convert'
 import History from './pages/History'
 import Profile from './pages/Profile'
+import Admin from './pages/Admin'
+import MerchantRegister from './pages/MerchantRegister'
 
 function AppContent() {
   const { user, loading, initialize } = useAuthStore()
@@ -39,6 +41,8 @@ function AppContent() {
         <Route path="/convert" element={<Convert />} />
         <Route path="/history" element={<History />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/merchants/register" element={<MerchantRegister />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <BottomNav />

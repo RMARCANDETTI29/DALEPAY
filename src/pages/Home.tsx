@@ -54,6 +54,20 @@ export default function Home() {
         ))}
       </div>
 
+      {/* Extra Links */}
+      <div className="grid grid-cols-2 gap-3 mt-3">
+        <a href="/merchants/register" className="bg-surface rounded-xl p-3 text-center hover:bg-surface-light transition-colors">
+          <span className="text-lg">⚡</span>
+          <p className="text-xs mt-1 text-text-secondary">Registro Comercio</p>
+        </a>
+        {profile?.is_admin && (
+          <a href="/admin" className="bg-primary/20 rounded-xl p-3 text-center hover:bg-primary/30 transition-colors">
+            <span className="text-lg">⚙</span>
+            <p className="text-xs mt-1 text-primary-light">Admin</p>
+          </a>
+        )}
+      </div>
+
       {/* Transactions */}
       <div className="mt-6">
         <h2 className="text-lg font-semibold mb-3">Actividad reciente</h2>

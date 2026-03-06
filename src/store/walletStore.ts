@@ -1,21 +1,25 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
-import type { Wallet, Transaction, Currency } from '../types'
-import { EXCHANGE_RATES, COMMISSION_RATE } from '../types'
+import type { Wallet, Transaction, Currency, ExchangeRate } from '../types'
+import { EXCHANGE_RATES, COMMISSION_RATE, TRANSFER_FEE_RATE } from '../types'
 
 interface WalletState {
   wallets: Wallet[]
   transactions: Transaction[]
+  exchangeRates: Record<string, number>
   loading: boolean
   fetchWallets: (userId: string) => Promise<void>
   fetchTransactions: (userId: string) => Promise<void>
-  sendMoney: (senderId: string, receiverEmail: string, amount: number, currency: Currency, description?: string) => Promise<void>
+  fetchExchangeRates: () => Promise<void>
+  getRate: (from: Currency, to: Currency) => number
+  sendMoney: (senderId: string, senderEmail: string, receiverEmail: string, amount: number, currency: Currency, description?: string) => Promise<void>
   convertCurrency: (userId: string, fromCurrency: Currency, toCurrency: Currency, amount: number) => Promise<void>
 }
 
 export const useWalletStore = create<WalletState>((set, get) => ({
   wallets: [],
   transactions: [],
+  exchangeRates: {},
   loading: false,
 
   fetchWallets: async (userId) => {
@@ -37,10 +41,26 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     if (data) set({ transactions: data })
   },
 
-  sendMoney: async (senderId, receiverEmail, amount, currency, description) => {
+  fetchExchangeRates: async () => {
+    const { data } = await supabase.from('exchange_rates').select('*')
+    if (data && data.length > 0) {
+      const rates: Record<string, number> = {}
+      data.forEach((r: ExchangeRate) => {
+        rates[`${r.from_currency}_${r.to_currency}`] = Number(r.rate)
+      })
+      set({ exchangeRates: rates })
+    }
+  },
+
+  getRate: (from, to) => {
+    const { exchangeRates } = get()
+    const key = `${from}_${to}`
+    return exchangeRates[key] || EXCHANGE_RATES[key] || 0
+  },
+
+  sendMoney: async (senderId, senderEmail, receiverEmail, amount, currency, description) => {
     set({ loading: true })
     try {
-      // Find receiver
       const { data: receiver } = await supabase
         .from('profiles')
         .select('id')
@@ -50,7 +70,10 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       if (!receiver) throw new Error('Usuario no encontrado')
       if (receiver.id === senderId) throw new Error('No puedes enviarte dinero a ti mismo')
 
-      // Get sender wallet
+      // Calculate P2P fee (0.3%)
+      const fee = Math.round(amount * TRANSFER_FEE_RATE * 100) / 100
+      const netAmount = amount - fee
+
       const { data: senderWallet } = await supabase
         .from('wallets')
         .select('*')
@@ -61,7 +84,6 @@ export const useWalletStore = create<WalletState>((set, get) => ({
       if (!senderWallet) throw new Error('Wallet no encontrada')
       if (senderWallet.balance < amount) throw new Error('Saldo insuficiente')
 
-      // Get receiver wallet
       const { data: receiverWallet } = await supabase
         .from('wallets')
         .select('*')
@@ -71,28 +93,28 @@ export const useWalletStore = create<WalletState>((set, get) => ({
 
       if (!receiverWallet) throw new Error('El destinatario no tiene wallet de ' + currency)
 
-      // Atomic transaction: deduct from sender, add to receiver
+      // Deduct full amount from sender
       const { error: e1 } = await supabase
         .from('wallets')
         .update({ balance: senderWallet.balance - amount })
         .eq('id', senderWallet.id)
-        .eq('balance', senderWallet.balance) // optimistic lock
+        .eq('balance', senderWallet.balance)
 
       if (e1) throw new Error('Error al procesar la transaccion')
 
+      // Credit net amount to receiver (amount minus fee)
       const { error: e2 } = await supabase
         .from('wallets')
-        .update({ balance: receiverWallet.balance + amount })
+        .update({ balance: receiverWallet.balance + netAmount })
         .eq('id', receiverWallet.id)
 
       if (e2) {
-        // Rollback sender
         await supabase.from('wallets').update({ balance: senderWallet.balance }).eq('id', senderWallet.id)
         throw new Error('Error al acreditar al destinatario')
       }
 
       // Record transaction
-      await supabase.from('transactions').insert({
+      const { data: txData } = await supabase.from('transactions').insert({
         sender_id: senderId,
         receiver_id: receiver.id,
         sender_wallet_id: senderWallet.id,
@@ -102,10 +124,21 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         type: 'transfer',
         status: 'completed',
         description: description || `Envio de ${currency}`,
-        fee: 0,
-        sender_email: senderWallet.user_id,
+        fee,
+        sender_email: senderEmail,
         receiver_email: receiverEmail,
-      })
+      }).select('id').single()
+
+      // Record fee collected
+      if (fee > 0 && txData) {
+        await supabase.from('fees_collected').insert({
+          transaction_id: txData.id,
+          user_id: senderId,
+          amount: fee,
+          currency,
+          fee_type: 'transfer',
+        })
+      }
 
       await get().fetchWallets(senderId)
       await get().fetchTransactions(senderId)
@@ -117,11 +150,10 @@ export const useWalletStore = create<WalletState>((set, get) => ({
   convertCurrency: async (userId, fromCurrency, toCurrency, amount) => {
     set({ loading: true })
     try {
-      const rateKey = `${fromCurrency}_${toCurrency}`
-      const rate = EXCHANGE_RATES[rateKey]
+      const rate = get().getRate(fromCurrency, toCurrency)
       if (!rate) throw new Error('Conversion no disponible')
 
-      const fee = amount * COMMISSION_RATE
+      const fee = Math.round(amount * COMMISSION_RATE * 100) / 100
       const netAmount = amount - fee
       const convertedAmount = netAmount * rate
 
@@ -152,7 +184,7 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         .update({ balance: toWallet.balance + convertedAmount })
         .eq('id', toWallet.id)
 
-      await supabase.from('transactions').insert({
+      const { data: txData } = await supabase.from('transactions').insert({
         sender_id: userId,
         receiver_id: userId,
         sender_wallet_id: fromWallet.id,
@@ -163,7 +195,18 @@ export const useWalletStore = create<WalletState>((set, get) => ({
         status: 'completed',
         description: `Conversion ${fromCurrency} a ${toCurrency}`,
         fee,
-      })
+      }).select('id').single()
+
+      // Record fee collected
+      if (fee > 0 && txData) {
+        await supabase.from('fees_collected').insert({
+          transaction_id: txData.id,
+          user_id: userId,
+          amount: fee,
+          currency: fromCurrency,
+          fee_type: 'conversion',
+        })
+      }
 
       await get().fetchWallets(userId)
       await get().fetchTransactions(userId)

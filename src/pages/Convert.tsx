@@ -1,20 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useWalletStore } from '../store/walletStore'
 import type { Currency } from '../types'
-import { CURRENCY_SYMBOLS, EXCHANGE_RATES, COMMISSION_RATE } from '../types'
+import { CURRENCY_SYMBOLS, COMMISSION_RATE } from '../types'
 
 export default function Convert() {
   const { user } = useAuthStore()
-  const { wallets, convertCurrency, loading } = useWalletStore()
+  const { wallets, convertCurrency, loading, fetchExchangeRates, getRate } = useWalletStore()
   const [from, setFrom] = useState<Currency>('USD')
   const [to, setTo] = useState<Currency>('VES')
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const rateKey = `${from}_${to}`
-  const rate = EXCHANGE_RATES[rateKey] || 0
+  useEffect(() => {
+    fetchExchangeRates()
+  }, [fetchExchangeRates])
+
+  const rate = getRate(from, to)
   const numAmount = parseFloat(amount) || 0
   const fee = numAmount * COMMISSION_RATE
   const netAmount = numAmount - fee
@@ -95,7 +98,6 @@ export default function Convert() {
           </select>
         </div>
 
-        {/* Preview */}
         {numAmount > 0 && from !== to && (
           <div className="bg-surface rounded-xl p-4 space-y-2">
             <div className="flex justify-between text-sm">
