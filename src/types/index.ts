@@ -134,10 +134,10 @@ export const CURRENCY_SYMBOLS: Record<Currency, string> = {
 export const EXCHANGE_RATES: Record<string, number> = {
   'USD_USDT': 1.0,
   'USDT_USD': 1.0,
-  'USD_VES': 78.50,
-  'VES_USD': 1 / 78.50,
-  'USDT_VES': 78.50,
-  'VES_USDT': 1 / 78.50,
+  'USD_VES': 603.00,
+  'VES_USD': 1 / 603.00,
+  'USDT_VES': 603.00,
+  'VES_USDT': 1 / 603.00,
 }
 
 export const COMMISSION_RATE = 0.005

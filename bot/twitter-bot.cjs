@@ -23,7 +23,7 @@ const TWITTER_ACCESS_TOKEN = process.env.TWITTER_ACCESS_TOKEN || ''
 const TWITTER_ACCESS_SECRET = process.env.TWITTER_ACCESS_SECRET || ''
 
 const SUPABASE_URL = 'https://zzimrfepvoqidwhkgtsk.supabase.co'
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6aW1yZmVwdm9xaWR3aGtndHNrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNzQwMjgwMiwiZXhwIjoyMDUyOTc4ODAyfQ.NXXMjTflXqLlYMCIcPVJPnFBYKbKFQTLMTpQPKLuiKQ'
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6aW1yZmVwdm9xaWR3aGtndHNrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODc1MDA5NywiZXhwIjoyMDg0MzI2MDk3fQ.xh61TANOfBewMkpQYVQYI3GE2JLgoX0LkPhp2N1g60I'
 
 const BINANCE_P2P_URL = 'https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search'
 
@@ -80,6 +80,7 @@ function buildOAuthHeader(method, url, body = {}) {
 // -- API Calls --
 function postJSON(urlStr, body, headers = {}) {
   return new Promise((resolve, reject) => {
+    const zlib = require('zlib')
     const url = new URL(urlStr)
     const data = JSON.stringify(body)
     const options = {
@@ -89,16 +90,23 @@ function postJSON(urlStr, body, headers = {}) {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(data),
+        'Accept-Encoding': 'gzip, deflate',
         ...headers,
       },
     }
     const req = https.request(options, (res) => {
-      let result = ''
-      res.on('data', c => result += c)
-      res.on('end', () => {
+      const chunks = []
+      const encoding = res.headers['content-encoding']
+      let stream = res
+      if (encoding === 'gzip') stream = res.pipe(zlib.createGunzip())
+      else if (encoding === 'deflate') stream = res.pipe(zlib.createInflate())
+      stream.on('data', c => chunks.push(c))
+      stream.on('end', () => {
+        const result = Buffer.concat(chunks).toString()
         try { resolve({ status: res.statusCode, data: JSON.parse(result) }) }
         catch { resolve({ status: res.statusCode, data: result }) }
       })
+      stream.on('error', () => resolve({ status: res.statusCode, data: '' }))
     })
     req.on('error', reject)
     req.write(data)
