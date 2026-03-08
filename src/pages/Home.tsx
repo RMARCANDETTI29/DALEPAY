@@ -2,12 +2,13 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
 import { useWalletStore } from '../store/walletStore'
+import { formatRate } from '../lib/binanceRate'
 import WalletCard from '../components/WalletCard'
 import TransactionItem from '../components/TransactionItem'
 
 export default function Home() {
   const { user, profile } = useAuthStore()
-  const { wallets, transactions, fetchWallets, fetchTransactions } = useWalletStore()
+  const { wallets, transactions, fetchWallets, fetchTransactions, binanceRate, binanceRateLoading, fetchBinanceRate } = useWalletStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -15,7 +16,8 @@ export default function Home() {
       fetchWallets(user.id)
       fetchTransactions(user.id)
     }
-  }, [user, fetchWallets, fetchTransactions])
+    fetchBinanceRate()
+  }, [user, fetchWallets, fetchTransactions, fetchBinanceRate])
 
   const firstName = profile?.full_name?.split(' ')[0] || 'Usuario'
 
@@ -24,6 +26,23 @@ export default function Home() {
       <div className="mb-6">
         <p className="text-text-secondary text-sm">Hola,</p>
         <h1 className="text-2xl font-extrabold">{firstName}</h1>
+      </div>
+
+      {/* Binance Rate Banner */}
+      <div className="glass rounded-2xl p-4 mb-4 flex items-center justify-between" style={{ animation: 'pulse-glow 3s infinite' }}>
+        <div>
+          <p className="text-xs text-text-secondary font-medium">Tasa USD/VES — Binance P2P</p>
+          <p className="text-2xl font-extrabold text-success">
+            {binanceRateLoading ? '...' : binanceRate ? `${formatRate(binanceRate)} Bs` : '---'}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-text-secondary">1 USDT =</p>
+          <p className="text-sm font-bold text-primary-light">
+            {binanceRate ? `${formatRate(binanceRate)} VES` : '---'}
+          </p>
+          <p className="text-xs text-text-secondary mt-1">Actualiza c/30min</p>
+        </div>
       </div>
 
       {/* Wallets Carousel */}
@@ -59,24 +78,39 @@ export default function Home() {
       </div>
 
       {/* Extra Links */}
-      <div className="grid grid-cols-2 gap-3 mt-3">
+      <div className="grid grid-cols-3 gap-3 mt-3">
+        <button
+          onClick={() => navigate('/recharge')}
+          className="glass rounded-2xl p-3 text-center hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
+          <span className="text-lg">💰</span>
+          <p className="text-xs mt-1 text-text-secondary font-medium">Recargar</p>
+        </button>
+        <button
+          onClick={() => navigate('/p2p')}
+          className="glass rounded-2xl p-3 text-center hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
+        >
+          <span className="text-lg">🔄</span>
+          <p className="text-xs mt-1 text-text-secondary font-medium">P2P</p>
+        </button>
         <button
           onClick={() => navigate('/merchants/register')}
           className="glass rounded-2xl p-3 text-center hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
         >
           <span className="text-lg">⚡</span>
-          <p className="text-xs mt-1 text-text-secondary font-medium">Registro Comercio</p>
+          <p className="text-xs mt-1 text-text-secondary font-medium">Comercio</p>
         </button>
-        {profile?.is_admin && (
-          <button
-            onClick={() => navigate('/admin')}
-            className="glass rounded-2xl p-3 text-center border-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-          >
-            <span className="text-lg">⚙</span>
-            <p className="text-xs mt-1 text-primary-light font-medium">Admin</p>
-          </button>
-        )}
       </div>
+
+      {profile?.is_admin && (
+        <button
+          onClick={() => navigate('/admin')}
+          className="w-full glass rounded-2xl p-3 text-center border-primary/30 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200 mt-3"
+        >
+          <span className="text-lg">⚙</span>
+          <p className="text-xs mt-1 text-primary-light font-medium">Panel Admin</p>
+        </button>
+      )}
 
       {/* Transactions */}
       <div className="mt-6 animate-slide-up">

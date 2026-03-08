@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { IoHomeOutline, IoHome, IoSendOutline, IoSend, IoQrCodeOutline, IoQrCode, IoSwapHorizontalOutline, IoSwapHorizontal, IoPersonOutline, IoPerson } from 'react-icons/io5'
+import { IoHomeOutline, IoHome, IoSendOutline, IoSend, IoSwapHorizontalOutline, IoSwapHorizontal, IoPersonOutline, IoPerson, IoPeopleOutline, IoPeople } from 'react-icons/io5'
 
 const tabs = [
   { path: '/', label: 'Inicio', Icon: IoHomeOutline, ActiveIcon: IoHome },
   { path: '/send', label: 'Enviar', Icon: IoSendOutline, ActiveIcon: IoSend },
-  { path: '/qr', label: 'QR', Icon: IoQrCodeOutline, ActiveIcon: IoQrCode },
+  { path: '/p2p', label: 'P2P', Icon: IoPeopleOutline, ActiveIcon: IoPeople },
   { path: '/convert', label: 'Cambio', Icon: IoSwapHorizontalOutline, ActiveIcon: IoSwapHorizontal },
   { path: '/profile', label: 'Perfil', Icon: IoPersonOutline, ActiveIcon: IoPerson },
 ]

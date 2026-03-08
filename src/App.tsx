@@ -11,6 +11,8 @@ import History from './pages/History'
 import Profile from './pages/Profile'
 import Admin from './pages/Admin'
 import MerchantRegister from './pages/MerchantRegister'
+import Recharge from './pages/Recharge'
+import P2P from './pages/P2P'
 
 function AppContent() {
   const { user, loading, initialize } = useAuthStore()
@@ -48,6 +50,8 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/merchants/register" element={<MerchantRegister />} />
+        <Route path="/recharge" element={<Recharge />} />
+        <Route path="/p2p" element={<P2P />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <BottomNav />

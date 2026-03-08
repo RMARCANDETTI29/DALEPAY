@@ -17,8 +17,8 @@ export interface Transaction {
   receiver_wallet_id: string | null
   amount: number
   currency: Currency
-  type: 'transfer' | 'conversion' | 'deposit'
-  status: 'completed' | 'pending' | 'failed'
+  type: 'transfer' | 'conversion' | 'deposit' | 'p2p'
+  status: 'completed' | 'pending' | 'failed' | 'cancelled'
   description: string | null
   fee: number
   created_at: string
@@ -42,7 +42,9 @@ export interface FeeCollected {
   user_id: string | null
   amount: number
   currency: string
-  fee_type: 'conversion' | 'transfer'
+  fee_type: 'conversion' | 'transfer' | 'p2p'
+  wallet_address: string
+  txid: string | null
   created_at: string
 }
 
@@ -52,6 +54,57 @@ export interface ExchangeRate {
   to_currency: string
   rate: number
   updated_at: string
+}
+
+export interface RateHistory {
+  id: string
+  source: string
+  from_currency: string
+  to_currency: string
+  rate: number
+  raw_data: unknown
+  created_at: string
+}
+
+export interface UsdtDeposit {
+  id: string
+  user_id: string
+  amount: number
+  tx_hash: string
+  network: string
+  deposit_address: string
+  status: 'pending' | 'approved' | 'rejected'
+  reviewed_by: string | null
+  reviewed_at: string | null
+  created_at: string
+}
+
+export interface P2POrder {
+  id: string
+  seller_id: string
+  buyer_id: string | null
+  type: 'sell' | 'buy'
+  amount_usdt: number
+  rate: number
+  amount_ves: number
+  payment_method: string
+  payment_details: Record<string, string> | null
+  status: 'open' | 'taken' | 'paid' | 'completed' | 'cancelled' | 'disputed' | 'expired'
+  fee: number
+  expires_at: string | null
+  created_at: string
+  updated_at: string
+  seller_profile?: Profile
+  buyer_profile?: Profile
+}
+
+export interface P2PMessage {
+  id: string
+  order_id: string
+  sender_id: string
+  message: string
+  created_at: string
+  sender_profile?: Profile
 }
 
 export interface Merchant {
@@ -89,3 +142,7 @@ export const EXCHANGE_RATES: Record<string, number> = {
 
 export const COMMISSION_RATE = 0.005
 export const TRANSFER_FEE_RATE = 0.003
+export const P2P_FEE_RATE = 0.005
+
+export const COMMISSION_WALLET = 'TBTeqEJ4PAVxBrcSvWaACCkVzGwM6Sk6Zt'
+export const DEPOSIT_ADDRESS = 'TBTeqEJ4PAVxBrcSvWaACCkVzGwM6Sk6Zt'

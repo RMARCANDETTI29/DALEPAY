@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useWalletStore } from '../store/walletStore'
+import { formatRate } from '../lib/binanceRate'
 import type { Currency } from '../types'
 import { CURRENCY_SYMBOLS, COMMISSION_RATE } from '../types'
 import { showMainButton, hideMainButton, hapticFeedback, isTelegram } from '../lib/telegram'
 
 export default function Convert() {
   const { user } = useAuthStore()
-  const { wallets, convertCurrency, loading, fetchExchangeRates, fetchWallets, getRate } = useWalletStore()
+  const { wallets, convertCurrency, loading, fetchExchangeRates, fetchWallets, getRate, binanceRate, fetchBinanceRate } = useWalletStore()
   const [from, setFrom] = useState<Currency>('USD')
   const [to, setTo] = useState<Currency>('VES')
   const [amount, setAmount] = useState('')
@@ -16,8 +17,9 @@ export default function Convert() {
 
   useEffect(() => {
     fetchExchangeRates()
+    fetchBinanceRate()
     if (user) fetchWallets(user.id)
-  }, [fetchExchangeRates, fetchWallets, user])
+  }, [fetchExchangeRates, fetchBinanceRate, fetchWallets, user])
 
   const rate = getRate(from, to)
   const numAmount = parseFloat(amount) || 0
@@ -66,7 +68,18 @@ export default function Convert() {
 
   return (
     <div className="pb-20 px-4 pt-6 max-w-lg mx-auto w-full animate-fade-in">
-      <h1 className="text-2xl font-extrabold mb-6">Convertir moneda</h1>
+      <h1 className="text-2xl font-extrabold mb-2">Convertir moneda</h1>
+
+      {/* Binance Rate */}
+      {binanceRate && (
+        <div className="glass rounded-2xl p-3 mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-text-secondary">Tasa Binance P2P</p>
+            <p className="text-lg font-extrabold text-success">1 USD = {formatRate(binanceRate)} Bs</p>
+          </div>
+          <span className="px-2 py-1 rounded-lg bg-success/15 text-success text-xs font-semibold">En vivo</span>
+        </div>
+      )}
 
       <form onSubmit={handleConvert} className="space-y-4">
         <div className="glass rounded-2xl p-4">
@@ -145,6 +158,12 @@ export default function Convert() {
               <span className="text-text-secondary">Comision (0.5%)</span>
               <span>{CURRENCY_SYMBOLS[from]} {fee.toFixed(2)}</span>
             </div>
+            {binanceRate && (from === 'VES' || to === 'VES') && (
+              <div className="flex justify-between text-sm border-t border-white/5 pt-2">
+                <span className="text-text-secondary">Ref. Binance P2P</span>
+                <span className="text-success">{formatRate(binanceRate)} Bs/USD</span>
+              </div>
+            )}
           </div>
         )}
 
