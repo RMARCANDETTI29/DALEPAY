@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DalePay - Enviar Dinero a Venezuela | Billetera USDT | Cambio Dolar Bolivar | P2P Venezuela</title>
+  <meta name="description" content="DalePay es la billetera digital para Venezuela. Envia dinero, cambia dolares a bolivares con tasa Binance P2P en tiempo real. USDT, USD y VES. Pago Movil P2P. Sin bancos, sin fronteras.">
+  <meta name="keywords" content="enviar dinero Venezuela, cambio dolar bolivar, billetera USDT Venezuela, p2p Venezuela, tasa dolar Venezuela, comprar USDT Venezuela, pago movil USDT, remesas Venezuela, cambio bolivar dolar, Binance P2P Venezuela, wallet Venezuela, cripto Venezuela, enviar dolares Venezuela, cambio VES USD, dolar paralelo Venezuela">
+  <meta name="author" content="DalePay">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rmarcandetti29.github.io/DALEPAY/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DalePay - Tu Billetera Digital Multi-Moneda para Venezuela">
+  <meta property="og:description" content="Envia, recibe y convierte USD, USDT y Bolivares al instante. Tasa Binance P2P en tiempo real. P2P con Pago Movil.">
+  <meta property="og:url" content="https://rmarcandetti29.github.io/DALEPAY/">
+  <meta property="og:site_name" content="DalePay">
+  <meta property="og:locale" content="es_VE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@DalePayApp">
+  <meta name="twitter:title" content="DalePay - Billetera Digital Venezuela">
+  <meta name="twitter:description" content="Envia dinero, cambia dolar a bolivar con tasa Binance P2P. USDT, USD y VES sin complicaciones.">
+
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FinancialService",
+    "name": "DalePay",
+    "description": "Billetera digital multi-moneda para Venezuela. Envia, recibe y convierte USD, USDT y Bolivares.",
+    "url": "https://rmarcandetti29.github.io/DALEPAY/",
+    "areaServed": "Venezuela",
+    "serviceType": ["Money Transfer", "Currency Exchange", "Digital Wallet"],
+    "availableChannel": {
+      "@type": "ServiceChannel",
+      "serviceUrl": "https://rmarcandetti29.github.io/DALEPAY/",
+      "availableLanguage": "Spanish"
+    }
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0f;
+      color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+    @keyframes bgPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #a78bfa, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+    .hero-rate {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #10b981;
+    }
+    .hero-rate .dot {
+      width: 8px; height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      color: white;
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: #f1f5f9;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Features */
+    .features { padding: 100px 0; }
+    .features h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(16px);
+      transition: transform 0.2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
+
+    /* How it works */
+    .how { padding: 80px 0; text-align: center; }
+    .how h2 { font-size: 2rem; font-weight: 800; margin-bottom: 60px; }
+    .steps {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .step {
+      flex: 1;
+      min-width: 200px;
+      max-width: 280px;
+    }
+    .step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin: 0 auto 16px;
+    }
+    .step h3 { font-weight: 700; margin-bottom: 8px; }
+    .step p { color: #94a3b8; font-size: 0.9rem; }
+
+    /* Commissions */
+    .commissions { padding: 80px 0; }
+    .commissions h2 { font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 40px; }
+    .comm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto; }
+    .comm-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .comm-card .rate { font-size: 2rem; font-weight: 900; color: #10b981; }
+    .comm-card .label { color: #94a3b8; margin-top: 8px; }
+
+    /* CTA */
+    .final-cta {
+      padding: 100px 0;
+      text-align: center;
+    }
+    .final-cta h2 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
+    .final-cta p { color: #94a3b8; margin-bottom: 32px; font-size: 1.1rem; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 40px 0;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+    footer a { color: #a78bfa; text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .cta-buttons { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 320px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content container">
+      <div class="hero-rate" id="live-rate">
+        <span class="dot"></span>
+        <span>Tasa en vivo: Cargando...</span>
+      </div>
+      <h1>Tu dinero digital<br>en <span>Venezuela</span></h1>
+      <p>Envia, recibe y convierte USD, USDT y Bolivares al instante. Tasa Binance P2P en tiempo real. Sin bancos, sin fronteras.</p>
+      <div class="cta-buttons">
+        <a href="https://t.me/DalePayBot" class="btn btn-primary" target="_blank" rel="noopener">
+          Abrir en Telegram
+        </a>
+        <a href="https://rmarcandetti29.github.io/DALEPAY/" class="btn btn-secondary">
+          Usar en la web
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="funciones">
+    <div class="container">
+      <h2>Todo lo que necesitas</h2>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(124,58,237,0.15);">💱</div>
+          <h3>Tasa Binance P2P</h3>
+          <p>Tasa USD/VES actualizada en tiempo real desde Binance P2P. Sin tasas inventadas, siempre la referencia del mercado.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(16,185,129,0.15);">💸</div>
+          <h3>Enviar dinero a Venezuela</h3>
+          <p>Envia dolares o USDT a cualquier usuario DalePay al instante. Solo 0.3% de comision.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(6,182,212,0.15);">🔄</div>
+          <h3>Cambio dolar bolivar</h3>
+          <p>Convierte entre USD, USDT y Bolivares en segundos con tasa Binance P2P. 0.5% de comision.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(245,158,11,0.15);">🤝</div>
+          <h3>P2P con Pago Movil</h3>
+          <p>Compra y vende USDT usando Pago Movil. Tasa referencial Binance. Chat integrado y proteccion al usuario.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(59,130,246,0.15);">💎</div>
+          <h3>Billetera USDT Venezuela</h3>
+          <p>Recarga USDT (TRC20) a tu billetera DalePay. Direccion dedicada, verificacion rapida.</p>
+        </article>
+        <article class="feature-card">
+          <div class="feature-icon" style="background: rgba(244,63,94,0.15);">📱</div>
+          <h3>Telegram + Web</h3>
+          <p>Usa DalePay directamente en Telegram como Mini App o desde el navegador. Sin descargar nada.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how" id="como-funciona">
+    <div class="container">
+      <h2>Como funciona</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Registrate gratis</h3>
+          <p>Crea tu cuenta con tu correo en segundos. Sin documentos.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Recarga tu wallet</h3>
+          <p>Envia USDT (TRC20) o recibe de otros usuarios.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Opera libremente</h3>
+          <p>Envia, recibe, convierte o usa el P2P con Pago Movil.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commissions -->
+  <section class="commissions" id="comisiones">
+    <div class="container">
+      <h2>Comisiones transparentes</h2>
+      <div class="comm-grid">
+        <div class="comm-card">
+          <div class="rate">0.3%</div>
+          <div class="label">Envios P2P</div>
+        </div>
+        <div class="comm-card">
+          <div class="rate">0.5%</div>
+          <div class="label">Conversiones y P2P Market</div>
+        </div>
+        <div class="comm-card">
+          <div class="rate">0%</div>
+          <div class="label">Registro y recepcion</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2>Empieza ahora</h2>
+      <p>Unete a miles de venezolanos que ya usan DalePay</p>
+      <div class="cta-buttons">
+        <a href="https://t.me/DalePayBot" class="btn btn-primary" target="_blank" rel="noopener">
+          Abrir en Telegram
+        </a>
+        <a href="https://rmarcandetti29.github.io/DALEPAY/" class="btn btn-secondary">
+          Usar en la web
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>DalePay &copy; 2025-2026. Billetera digital multi-moneda para Venezuela.</p>
+      <p style="margin-top: 8px;"><a href="https://t.me/DalePayBot">Telegram</a> &bull; <a href="https://twitter.com/DalePayApp">Twitter</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Fetch live rate for landing
+    async function fetchRate() {
+      try {
+        const res = await fetch('https://zzimrfepvoqidwhkgtsk.supabase.co/rest/v1/rate_history?select=rate&order=created_at.desc&limit=1', {
+          headers: {
+            apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6aW1yZmVwdm9xaWR3aGtndHNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NTAwOTcsImV4cCI6MjA4NDMyNjA5N30.rK5UpI4W95gz_QbX3sbxiqqj2dyNXsW-ylZpNCqr81Q'
+          }
+        })
+        const data = await res.json()
+        if (data && data[0]) {
+          const rate = parseFloat(data[0].rate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+          document.getElementById('live-rate').innerHTML = '<span class="dot"></span><span>1 USD = ' + rate + ' Bs — Binance P2P</span>'
+        }
+      } catch {}
+    }
+    fetchRate()
+    setInterval(fetchRate, 5 * 60 * 1000)
+  </script>
+</body>
+</html>
