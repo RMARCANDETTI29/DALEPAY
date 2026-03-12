@@ -24,9 +24,8 @@
   <meta name="twitter:title" content="DalePay - Billetera Digital Venezuela">
   <meta name="twitter:description" content="Envia dinero, cambia dolar a bolivar con tasa Binance P2P. USDT, USD y VES sin complicaciones.">
 
-  <meta name="theme-color" content="#7c3aed">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#00C47A">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700&f[]=satoshi@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Structured Data -->
   <script type="application/ld+json">
@@ -49,20 +48,36 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0a0a0f;
-      color: #f1f5f9;
+      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #070708;
+      color: #fff;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      letter-spacing: -0.01em;
     }
+    .font-display { font-family: 'Clash Display', sans-serif; font-weight: 700; letter-spacing: -0.03em; }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Grid bg */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0,196,122,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,196,122,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Nav */
+    nav { padding: 20px 0; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 36px; height: 36px; background: #00C47A; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .logo-icon span { font-family: 'Clash Display', sans-serif; font-weight: 700; font-size: 18px; color: #070708; }
+    .nav-cta { padding: 10px 24px; background: #00C47A; color: #070708; border-radius: 12px; font-weight: 600; font-size: 14px; transition: all 0.3s; }
+    .nav-cta:hover { box-shadow: 0 0 30px rgba(0,196,122,0.25); }
 
     /* Hero */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 100px 0 80px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -70,54 +85,28 @@
     .hero::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle at 30% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-                  radial-gradient(circle at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-      animation: bgPulse 8s ease-in-out infinite;
-    }
-    @keyframes bgPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 500px;
+      background: radial-gradient(ellipse, rgba(0,196,122,0.08) 0%, transparent 70%);
+      pointer-events: none;
     }
     .hero-content { position: relative; z-index: 1; }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-    }
-    .hero h1 span {
-      background: linear-gradient(135deg, #a78bfa, #06b6d4);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      color: #94a3b8;
-      max-width: 600px;
-      margin: 0 auto 2rem;
-      line-height: 1.6;
-    }
     .hero-rate {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 12px;
-      padding: 12px 20px;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #10b981;
+      background: rgba(0,196,122,0.08);
+      border: 1px solid rgba(0,196,122,0.15);
+      border-radius: 100px;
+      padding: 10px 20px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #00C47A;
     }
-    .hero-rate .dot {
-      width: 8px; height: 8px;
-      background: #10b981;
+    .dot {
+      width: 6px; height: 6px;
+      background: #00C47A;
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
@@ -125,134 +114,118 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.3; }
     }
-
-    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 32px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      border: none;
-      cursor: pointer;
+    .hero h1 {
+      font-size: clamp(40px, 8vw, 72px);
+      line-height: 1.05;
+      margin-bottom: 20px;
     }
-    .btn:hover { transform: translateY(-2px); }
+    .hero h1 .green { color: #00C47A; }
+    .hero p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.45);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      color: white;
-      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+      padding: 16px 32px; background: #00C47A; color: #070708;
+      border-radius: 14px; font-weight: 600; font-size: 16px;
+      border: none; cursor: pointer; transition: all 0.3s; display: inline-block;
     }
+    .btn-primary:hover { box-shadow: 0 0 40px rgba(0,196,122,0.3); transform: translateY(-1px); }
     .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      color: #f1f5f9;
-      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 32px; background: rgba(255,255,255,0.06); color: #fff;
+      border-radius: 14px; font-weight: 500; font-size: 16px;
+      border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.3s; display: inline-block;
     }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
     /* Features */
-    .features { padding: 100px 0; }
-    .features h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 60px;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
+    .features { padding: 80px 0; }
+    .features h2 { font-size: 36px; text-align: center; margin-bottom: 48px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .feature-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 32px;
-      backdrop-filter: blur(16px);
-      transition: transform 0.2s;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 32px; transition: all 0.3s;
     }
-    .feature-card:hover { transform: translateY(-4px); }
+    .feature-card:hover { border-color: rgba(0,196,122,0.2); background: rgba(255,255,255,0.05); transform: translateY(-2px); }
     .feature-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 16px;
+      width: 48px; height: 48px; background: rgba(0,196,122,0.1);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
     }
-    .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-    .feature-card p { color: #94a3b8; font-size: 0.95rem; line-height: 1.5; }
+    .feature-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6; }
 
     /* How it works */
     .how { padding: 80px 0; text-align: center; }
-    .how h2 { font-size: 2rem; font-weight: 800; margin-bottom: 60px; }
-    .steps {
-      display: flex;
-      gap: 40px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .step {
-      flex: 1;
-      min-width: 200px;
-      max-width: 280px;
-    }
+    .how h2 { font-size: 36px; margin-bottom: 48px; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+    .step { padding: 24px; }
     .step-num {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #3b82f6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
-      margin: 0 auto 16px;
+      width: 44px; height: 44px; background: #00C47A; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #070708; margin: 0 auto 16px; font-size: 20px;
     }
-    .step h3 { font-weight: 700; margin-bottom: 8px; }
-    .step p { color: #94a3b8; font-size: 0.9rem; }
+    .step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .step p { font-size: 13px; color: rgba(255,255,255,0.35); line-height: 1.5; }
 
     /* Commissions */
-    .commissions { padding: 80px 0; }
-    .commissions h2 { font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 40px; }
-    .comm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 800px; margin: 0 auto; }
+    .commissions { padding: 60px 0; }
+    .commissions h2 { font-size: 36px; text-align: center; margin-bottom: 40px; }
+    .comm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 700px; margin: 0 auto; }
     .comm-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 28px; text-align: center;
     }
-    .comm-card .rate { font-size: 2rem; font-weight: 900; color: #10b981; }
-    .comm-card .label { color: #94a3b8; margin-top: 8px; }
+    .comm-card .rate { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: #00C47A; }
+    .comm-card .label { color: rgba(255,255,255,0.4); margin-top: 8px; font-size: 14px; }
 
-    /* CTA */
+    /* CTA section */
     .final-cta {
-      padding: 100px 0;
-      text-align: center;
+      padding: 80px 0; text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(0,196,122,0.03) 50%, transparent);
     }
-    .final-cta h2 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
-    .final-cta p { color: #94a3b8; margin-bottom: 32px; font-size: 1.1rem; }
+    .final-cta h2 { font-size: 36px; margin-bottom: 16px; }
+    .final-cta p { color: rgba(255,255,255,0.4); margin-bottom: 32px; font-size: 16px; }
+
+    /* Referral */
+    .referral { padding: 60px 0; text-align: center; }
+    .referral-box {
+      background: rgba(0,196,122,0.04); border: 1px solid rgba(0,196,122,0.1);
+      border-radius: 20px; padding: 40px; max-width: 600px; margin: 0 auto;
+    }
+    .referral-box h3 { font-size: 24px; margin-bottom: 12px; }
+    .referral-box p { color: rgba(255,255,255,0.45); font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
+    .referral-box .highlight { color: #00C47A; font-weight: 700; font-size: 28px; display: block; margin-bottom: 8px; }
 
     /* Footer */
     footer {
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding: 40px 0;
-      text-align: center;
-      color: #64748b;
-      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 0; text-align: center;
     }
-    footer a { color: #a78bfa; text-decoration: none; }
+    footer p { font-size: 13px; color: rgba(255,255,255,0.25); }
+    footer a { color: #00C47A; }
 
     @media (max-width: 640px) {
+      .hero { padding: 60px 0 40px; }
       .cta-buttons { flex-direction: column; align-items: center; }
-      .btn { width: 100%; max-width: 320px; justify-content: center; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 320px; text-align: center; }
+      .features-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-<body>
+<body class="grid-bg">
+  <div class="container">
+    <nav>
+      <a href="#" class="nav-logo">
+        <div class="logo-icon"><span class="font-display">D</span></div>
+        <span class="font-display" style="font-size: 20px;">Dale<span style="color:#00C47A">Pay</span></span>
+      </a>
+      <a href="./" class="nav-cta">Abrir App</a>
+    </nav>
+  </div>
+
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content container">
@@ -260,15 +233,13 @@
         <span class="dot"></span>
         <span>Tasa en vivo: Cargando...</span>
       </div>
-      <h1>Tu dinero digital<br>en <span>Venezuela</span></h1>
+      <h1 class="font-display">
+        Tu wallet<br><span class="green">multidivisa</span>
+      </h1>
       <p>Envia, recibe y convierte USD, USDT y Bolivares al instante. Tasa Binance P2P en tiempo real. Sin bancos, sin fronteras.</p>
       <div class="cta-buttons">
-        <a href="https://t.me/DalePayBot" class="btn btn-primary" target="_blank" rel="noopener">
-          Abrir en Telegram
-        </a>
-        <a href="https://dalepay.io/" class="btn btn-secondary">
-          Usar en la web
-        </a>
+        <a href="./" class="btn-primary">Comenzar gratis</a>
+        <a href="https://t.me/DalePayBot" target="_blank" rel="noopener" class="btn-secondary">Abrir en Telegram</a>
       </div>
     </div>
   </section>
@@ -276,37 +247,49 @@
   <!-- Features -->
   <section class="features" id="funciones">
     <div class="container">
-      <h2>Todo lo que necesitas</h2>
+      <h2 class="font-display">Todo lo que necesitas</h2>
       <div class="features-grid">
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(124,58,237,0.15);">💱</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+          </div>
           <h3>Tasa Binance P2P</h3>
           <p>Tasa USD/VES actualizada en tiempo real desde Binance P2P. Sin tasas inventadas, siempre la referencia del mercado.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(16,185,129,0.15);">💸</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          </div>
           <h3>Enviar dinero a Venezuela</h3>
           <p>Envia dolares o USDT a cualquier usuario DalePay al instante. Solo 0.3% de comision.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(6,182,212,0.15);">🔄</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
           <h3>Cambio dolar bolivar</h3>
           <p>Convierte entre USD, USDT y Bolivares en segundos con tasa Binance P2P. 0.5% de comision.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(245,158,11,0.15);">🤝</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
           <h3>P2P con Pago Movil</h3>
-          <p>Compra y vende USDT usando Pago Movil. Tasa referencial Binance. Chat integrado y proteccion al usuario.</p>
+          <p>Compra y vende USDT usando Pago Movil, transferencia o Zinli. Chat integrado y proteccion al usuario.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(59,130,246,0.15);">💎</div>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
           <h3>Billetera USDT Venezuela</h3>
-          <p>Recarga USDT (TRC20) a tu billetera DalePay. Direccion dedicada, verificacion rapida.</p>
+          <p>Recarga USDT (TRC20) a tu billetera DalePay. Verificacion blockchain automatica.</p>
         </article>
         <article class="feature-card">
-          <div class="feature-icon" style="background: rgba(244,63,94,0.15);">📱</div>
-          <h3>Telegram + Web</h3>
-          <p>Usa DalePay directamente en Telegram como Mini App o desde el navegador. Sin descargar nada.</p>
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C47A" stroke-width="1.8" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>Verificacion Telegram</h3>
+          <p>Verifica tu identidad con Telegram para operar sin limites. Rapido y sin documentos.</p>
         </article>
       </div>
     </div>
@@ -315,22 +298,27 @@
   <!-- How it works -->
   <section class="how" id="como-funciona">
     <div class="container">
-      <h2>Como funciona</h2>
+      <h2 class="font-display">Como funciona</h2>
       <div class="steps">
         <div class="step">
-          <div class="step-num">1</div>
-          <h3>Registrate gratis</h3>
-          <p>Crea tu cuenta con tu correo en segundos. Sin documentos.</p>
+          <div class="step-num font-display">1</div>
+          <h3>Registrate</h3>
+          <p>Crea tu cuenta con correo y contrasena en segundos</p>
         </div>
         <div class="step">
-          <div class="step-num">2</div>
-          <h3>Recarga tu wallet</h3>
-          <p>Envia USDT (TRC20) o recibe de otros usuarios.</p>
+          <div class="step-num font-display">2</div>
+          <h3>Verifica</h3>
+          <p>Vincula tu Telegram para desbloquear envios y P2P</p>
         </div>
         <div class="step">
-          <div class="step-num">3</div>
-          <h3>Opera libremente</h3>
-          <p>Envia, recibe, convierte o usa el P2P con Pago Movil.</p>
+          <div class="step-num font-display">3</div>
+          <h3>Recarga</h3>
+          <p>Deposita USDT o compra en el marketplace P2P</p>
+        </div>
+        <div class="step">
+          <div class="step-num font-display">4</div>
+          <h3>Opera</h3>
+          <p>Envia, recibe y convierte sin limites</p>
         </div>
       </div>
     </div>
@@ -339,15 +327,15 @@
   <!-- Commissions -->
   <section class="commissions" id="comisiones">
     <div class="container">
-      <h2>Comisiones transparentes</h2>
+      <h2 class="font-display">Comisiones transparentes</h2>
       <div class="comm-grid">
         <div class="comm-card">
           <div class="rate">0.3%</div>
-          <div class="label">Envios P2P</div>
+          <div class="label">Envios</div>
         </div>
         <div class="comm-card">
           <div class="rate">0.5%</div>
-          <div class="label">Conversiones y P2P Market</div>
+          <div class="label">Conversiones y P2P</div>
         </div>
         <div class="comm-card">
           <div class="rate">0%</div>
@@ -357,31 +345,38 @@
     </div>
   </section>
 
+  <!-- Referral -->
+  <section class="referral">
+    <div class="container">
+      <div class="referral-box">
+        <h3 class="font-display">Programa de referidos</h3>
+        <span class="highlight font-display">0.1%</span>
+        <p>Gana 0.1% de cada transaccion de tus referidos. Para siempre. Comparte tu link unico y empieza a ganar.</p>
+        <a href="./" class="btn-primary" style="font-size: 14px; padding: 12px 28px;">Obtener mi link</a>
+      </div>
+    </div>
+  </section>
+
   <!-- Final CTA -->
   <section class="final-cta">
     <div class="container">
-      <h2>Empieza ahora</h2>
-      <p>Unete a miles de venezolanos que ya usan DalePay</p>
+      <h2 class="font-display">Empieza hoy</h2>
+      <p>Unete a la wallet multidivisa mas rapida de Venezuela</p>
       <div class="cta-buttons">
-        <a href="https://t.me/DalePayBot" class="btn btn-primary" target="_blank" rel="noopener">
-          Abrir en Telegram
-        </a>
-        <a href="https://dalepay.io/" class="btn btn-secondary">
-          Usar en la web
-        </a>
+        <a href="./" class="btn-primary">Crear cuenta gratis</a>
+        <a href="https://t.me/DalePayBot" target="_blank" rel="noopener" class="btn-secondary">@DalePayBot</a>
       </div>
     </div>
   </section>
 
   <footer>
     <div class="container">
-      <p>DalePay &copy; 2025-2026. Billetera digital multi-moneda para Venezuela.</p>
-      <p style="margin-top: 8px;"><a href="https://t.me/DalePayBot">Telegram</a> &bull; <a href="https://twitter.com/DalePayApp">Twitter</a></p>
+      <p>DalePay &copy; 2025. Todos los derechos reservados.</p>
+      <p style="margin-top: 8px;"><a href="https://t.me/DalePayBot">Telegram</a></p>
     </div>
   </footer>
 
   <script>
-    // Fetch live rate for landing
     async function fetchRate() {
       try {
         const res = await fetch('https://zzimrfepvoqidwhkgtsk.supabase.co/rest/v1/rate_history?select=rate&order=created_at.desc&limit=1', {
